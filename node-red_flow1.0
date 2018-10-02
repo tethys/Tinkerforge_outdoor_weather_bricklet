@@ -1,0 +1,758 @@
+[
+    {
+        "id": "8da6ffba.2df618",
+        "type": "tab",
+        "label": "Wetterstation",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "866fcbb7.d9877",
+        "type": "mqtt out",
+        "z": "8da6ffba.2df618",
+        "name": "Stationsdaten",
+        "topic": "tinkerforge/bricklet/outdoor_weather/Es7/station_data",
+        "qos": "1",
+        "retain": "",
+        "broker": "deb2ff16.bda1b8",
+        "x": 620,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "8e2d342b.f57098",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "34ec4339.943e8c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Temperatur",
+        "format": "{{payload.temperature}} °C",
+        "layout": "row-spread",
+        "x": 1170,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d7fffe76.924bf8",
+        "type": "json",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 590,
+        "y": 300,
+        "wires": [
+            [
+                "4bdc7b8a.54453c",
+                "454a82b7.a64574",
+                "30836a92.144fbe",
+                "a1bc2347.4b685",
+                "21774b5e.da05d4",
+                "b4508ca4.d883d",
+                "c290fb3b.033c3",
+                "3a7fd249.28071e",
+                "61794085.8576b",
+                "3f6c6974.429e5e"
+            ]
+        ]
+    },
+    {
+        "id": "4bdc7b8a.54453c",
+        "type": "debug",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 570,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "454a82b7.a64574",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "34ec4339.943e8c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Relative Luftfeuchtigkeit",
+        "format": "{{msg.payload[18].humidity}}%",
+        "layout": "row-spread",
+        "x": 1150,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "30836a92.144fbe",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "a8a5b009.d3d848",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Wind-Geschwindigkeit",
+        "format": "{{(msg.payload[\"18\"].wind_speed)/10}} m/s",
+        "layout": "row-spread",
+        "x": 1180,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "21774b5e.da05d4",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "a8a5b009.d3d848",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Niederschlag",
+        "format": "{{(msg.payload[\"18\"].rain)/10}} mm",
+        "layout": "row-spread",
+        "x": 1230,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "38a1d2d3.e9d87e",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "a8a5b009.d3d848",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Windrichtung",
+        "format": "{{msg.payload[\"18\"].wind_direction}}",
+        "layout": "row-spread",
+        "x": 1330,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "a1bc2347.4b685",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "a8a5b009.d3d848",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Böen",
+        "format": "{{(msg.payload[\"18\"].gust_speed)/10}} m/s",
+        "layout": "row-spread",
+        "x": 1150,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "b4508ca4.d883d",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Switch-Windrichtung",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "0",
+                "fromt": "num",
+                "to": "N",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "1",
+                "fromt": "str",
+                "to": "NNE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "2",
+                "fromt": "num",
+                "to": "NE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "3",
+                "fromt": "str",
+                "to": "ENE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "4",
+                "fromt": "num",
+                "to": "E",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "5",
+                "fromt": "num",
+                "to": "ESE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "6",
+                "fromt": "str",
+                "to": "SE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "7",
+                "fromt": "num",
+                "to": "SSE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "8",
+                "fromt": "num",
+                "to": "S",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "9",
+                "fromt": "num",
+                "to": "SSW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "10",
+                "fromt": "num",
+                "to": "SW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "11",
+                "fromt": "num",
+                "to": "WSW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "12",
+                "fromt": "num",
+                "to": "W",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "13",
+                "fromt": "num",
+                "to": "WNW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "14",
+                "fromt": "num",
+                "to": "NW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "15",
+                "fromt": "num",
+                "to": "NNW",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1100,
+        "y": 540,
+        "wires": [
+            [
+                "38a1d2d3.e9d87e"
+            ]
+        ]
+    },
+    {
+        "id": "c290fb3b.033c3",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Batterie",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload[\"18\"].battery_low",
+                "pt": "msg",
+                "from": "false",
+                "fromt": "bool",
+                "to": "1",
+                "tot": "num"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].battery_low",
+                "pt": "msg",
+                "from": "true",
+                "fromt": "bool",
+                "to": "0",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 520,
+        "wires": [
+            [
+                "e0ce9dfc.7f022"
+            ]
+        ]
+    },
+    {
+        "id": "e0ce9dfc.7f022",
+        "type": "ui_gauge",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "a8a5b009.d3d848",
+        "order": 5,
+        "width": "4",
+        "height": "4",
+        "gtype": "wave",
+        "title": "Batteriestand",
+        "label": "",
+        "format": "{{msg.payload[\"18\"].battery_low}}",
+        "min": "0",
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1140,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "2538bd73.9da2a2",
+        "type": "ui_chart",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "c75fb9ed.300d68",
+        "order": 6,
+        "width": "9",
+        "height": "3",
+        "label": "Temperatur",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "35",
+        "removeOlder": 1,
+        "removeOlderPoints": "10",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1330,
+        "y": 80,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "6433330.b0df44c",
+        "type": "mqtt in",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "topic": "tinkerforge/bricklet/outdoor_weather/Es7/station_data",
+        "qos": "1",
+        "broker": "deb2ff16.bda1b8",
+        "x": 200,
+        "y": 220,
+        "wires": [
+            [
+                "579cd43b.fe506c",
+                "d7fffe76.924bf8"
+            ]
+        ]
+    },
+    {
+        "id": "579cd43b.fe506c",
+        "type": "delay",
+        "z": "8da6ffba.2df618",
+        "name": "Delay",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "10",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 450,
+        "y": 340,
+        "wires": [
+            [
+                "866fcbb7.d9877"
+            ]
+        ]
+    },
+    {
+        "id": "90ed9ab.3201268",
+        "type": "average-bars",
+        "z": "8da6ffba.2df618",
+        "name": "Temp-Durchschnitt",
+        "title": "Temperatur",
+        "period": "hour",
+        "yMin": "auto",
+        "yMax": "auto",
+        "showBarsValue": true,
+        "showScaleValue": true,
+        "showLastValue": true,
+        "showAverageValue": true,
+        "showMinimumValue": true,
+        "showMaximumValue": true,
+        "maxBar": 30,
+        "topColor": "#ff0000",
+        "bottomColor": "#ffff00",
+        "unit": "°C",
+        "fontColor": "#000000",
+        "barStyle": "Rectangle",
+        "decimal": 1,
+        "x": 1230,
+        "y": 140,
+        "wires": [
+            [
+                "7d04637b.e33554"
+            ]
+        ]
+    },
+    {
+        "id": "7d04637b.e33554",
+        "type": "ui_template",
+        "z": "8da6ffba.2df618",
+        "group": "c75fb9ed.300d68",
+        "name": "TempChart",
+        "order": 7,
+        "width": "12",
+        "height": "4",
+        "format": "<div ng-bind-html=\"msg.payload[18].temperature\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 1430,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6e457f0d.f692c8",
+        "type": "ui_gauge",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "34ec4339.943e8c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperatur",
+        "label": "°C",
+        "format": "{{payload.temperature}}",
+        "min": "-20",
+        "max": "50",
+        "colors": [
+            "#375aab",
+            "#1be403",
+            "#ff0000"
+        ],
+        "seg1": "15",
+        "seg2": "30",
+        "x": 1330,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "3a7fd249.28071e",
+        "type": "range",
+        "z": "8da6ffba.2df618",
+        "minin": "-200",
+        "maxin": "500",
+        "minout": "-20",
+        "maxout": "50",
+        "action": "roll",
+        "round": false,
+        "property": "payload[18].temperature",
+        "name": "TempRange",
+        "x": 830,
+        "y": 200,
+        "wires": [
+            [
+                "90ed9ab.3201268"
+            ]
+        ],
+        "outputLabels": [
+            "msg.payload[18].temperature"
+        ]
+    },
+    {
+        "id": "61794085.8576b",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": "8",
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 610,
+        "y": 140,
+        "wires": [
+            [
+                "faa7d26d.53aaf8",
+                "ef0b24dd.6452"
+            ]
+        ]
+    },
+    {
+        "id": "faa7d26d.53aaf8",
+        "type": "debug",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 790,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "3f6c6974.429e5e",
+        "type": "ui_gauge",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "a8a5b009.d3d848",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "compass",
+        "title": "Windkompass",
+        "label": "",
+        "format": "{{msg.payload[\"18\"].wind_direction}}",
+        "min": 0,
+        "max": "15",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1280,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "35f6a917.8eb9ce",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.temperature",
+                "pt": "msg",
+                "to": "(msg.payload.temperature)/10",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 100,
+        "wires": [
+            [
+                "2538bd73.9da2a2",
+                "b41b9f2.775f3e",
+                "8e2d342b.f57098",
+                "6e457f0d.f692c8"
+            ]
+        ]
+    },
+    {
+        "id": "b41b9f2.775f3e",
+        "type": "debug",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1010,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "ef0b24dd.6452",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 750,
+        "y": 160,
+        "wires": [
+            [
+                "35f6a917.8eb9ce"
+            ]
+        ]
+    },
+    {
+        "id": "deb2ff16.bda1b8",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "Wetterstation",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "34ec4339.943e8c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Temperatur und Luftfeuchtigkeit",
+        "tab": "54904d08.a9908c",
+        "order": 2,
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "a8a5b009.d3d848",
+        "type": "ui_group",
+        "z": "",
+        "name": "Wind und Niederschlag",
+        "tab": "54904d08.a9908c",
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "c75fb9ed.300d68",
+        "type": "ui_group",
+        "z": "",
+        "name": "",
+        "tab": "30bcb46e.f2642c",
+        "order": 1,
+        "disp": true,
+        "width": "24",
+        "collapse": false
+    },
+    {
+        "id": "54904d08.a9908c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Wetterstation",
+        "icon": "dashboard",
+        "order": 2
+    },
+    {
+        "id": "30bcb46e.f2642c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Grafiken",
+        "icon": "fa-bar-chart",
+        "order": 1
+    }
+]
