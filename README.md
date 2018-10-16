@@ -12,3 +12,6 @@ https://www.tinkerforge.com/de/doc/Software/Brick_MQTT_Proxy.html
 
 - Node-RED
 https://nodered.org/
+
+
+Die Daten werden von der Wetterstation per Funk übertragen und via MQTT Proxy an Mosquitto gesendet.
