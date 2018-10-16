@@ -14,6 +14,6 @@ https://www.tinkerforge.com/de/doc/Software/Brick_MQTT_Proxy.html
 https://nodered.org/
 
 
-Eine genaue Erklärung ist im [Wiki](../wiki) zu finden.
+Eine genaue Erklärung ist im [Wiki](.../wiki) zu finden.
 
 
