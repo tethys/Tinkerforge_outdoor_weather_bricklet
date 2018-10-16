@@ -1,0 +1,5154 @@
+[
+    {
+        "id": "8da6ffba.2df618",
+        "type": "tab",
+        "label": "MQTT, Live-Daten und DB",
+        "disabled": false,
+        "info": "Empfängt und gibt die aktuellen Daten der Wetterstation aus.\nAbspeichern in eine Postgres-DB.\nBerechnen der 5min, 1h und 1d Werte sowie Abspeichern in die DB.\n"
+    },
+    {
+        "id": "cafc6456.030c58",
+        "type": "tab",
+        "label": "METAR",
+        "disabled": false,
+        "info": "METAR Daten vom Flughafen Basel-Mülhausen"
+    },
+    {
+        "id": "d2ae4183.6160a8",
+        "type": "tab",
+        "label": "Sonne",
+        "disabled": false,
+        "info": "Sonne und Mond"
+    },
+    {
+        "id": "648f64e1.82d27c",
+        "type": "tab",
+        "label": "AVG/MAX/MIN Diagramme",
+        "disabled": false,
+        "info": "Abrufen der Daten aus der Postgres-DB für die Diagramme."
+    },
+    {
+        "id": "deb2ff16.bda1b8",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "Wetterstation",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "6e46c468.578b0c",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-custom",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#191919",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Dunkel",
+                "default": "#4B7930",
+                "baseColor": "#666666",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#4B7930",
+                    "value": "#666666",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#ff7f00",
+                    "edited": true
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#000000",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#ffffff",
+                    "edited": true
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#ffffff",
+                    "edited": true
+                },
+                "widget-backgroundColor": {
+                    "value": "#0000ff",
+                    "edited": true
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            }
+        },
+        "site": {
+            "name": "Wetterstation",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "54904d08.a9908c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Aktuelle Daten",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "a8a5b009.d3d848",
+        "type": "ui_group",
+        "z": "",
+        "name": "Wind und Niederschlag",
+        "tab": "54904d08.a9908c",
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "30bcb46e.f2642c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "1h Diagramm",
+        "icon": "fa-bar-chart",
+        "order": 2
+    },
+    {
+        "id": "34ec4339.943e8c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Temperatur und Luftfeuchtigkeit",
+        "tab": "54904d08.a9908c",
+        "order": 2,
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "c75fb9ed.300d68",
+        "type": "ui_group",
+        "z": "",
+        "name": "1h",
+        "tab": "30bcb46e.f2642c",
+        "order": 1,
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "ed8008fb.de3868",
+        "type": "websocket-listener",
+        "path": "/ws/dashboard",
+        "wholemsg": "false"
+    },
+    {
+        "id": "cad15b14.20bee8",
+        "type": "ui_link",
+        "z": "",
+        "name": "METAR",
+        "link": "http://127.0.0.1:1880/METAR",
+        "icon": "flight_takeoff",
+        "target": "iframe",
+        "order": 7
+    },
+    {
+        "id": "415d16f9.0e20a",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Sonne",
+        "icon": "fa-sun-o",
+        "order": 6
+    },
+    {
+        "id": "4c314516.d65d0c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Sonne",
+        "tab": "415d16f9.0e20a",
+        "order": 1,
+        "disp": true,
+        "width": "10",
+        "collapse": false
+    },
+    {
+        "id": "1492e550.2cd463",
+        "type": "tls-config",
+        "z": "",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "https://api.nasa.gov",
+        "verifyservercert": true
+    },
+    {
+        "id": "64c27494.ba8694",
+        "type": "postgresdb",
+        "z": "",
+        "hostname": "localhost",
+        "port": "5432",
+        "db": "Node-RED",
+        "ssl": false
+    },
+    {
+        "id": "41da6ecc.aa84d8",
+        "type": "ui_group",
+        "z": "",
+        "name": "Charts",
+        "tab": "",
+        "order": 2,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "57549775.ba4c5",
+        "type": "ui_group",
+        "z": "",
+        "name": "Group 3",
+        "tab": "",
+        "order": 3,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "fcffa4f8.5f39",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Infos",
+        "icon": "dashboard",
+        "order": 8
+    },
+    {
+        "id": "324baf54.96157",
+        "type": "ui_group",
+        "z": "",
+        "name": "Broker Statistik",
+        "tab": "fcffa4f8.5f39",
+        "order": 1,
+        "disp": true,
+        "width": "11",
+        "collapse": false
+    },
+    {
+        "id": "1fedfbdc.3678e4",
+        "type": "ui_tab",
+        "z": "",
+        "name": "24h Diagramm",
+        "icon": "fa-bar-chart",
+        "order": 3
+    },
+    {
+        "id": "7c2ac91f.f211b8",
+        "type": "ui_tab",
+        "z": "",
+        "name": "1 Woche Diagramm",
+        "icon": "fa-bar-chart",
+        "order": 4
+    },
+    {
+        "id": "882e20dd.fac48",
+        "type": "ui_tab",
+        "z": "",
+        "name": "1 Monat Diagramm",
+        "icon": "fa-bar-chart",
+        "order": 5
+    },
+    {
+        "id": "6a291a22.82e48c",
+        "type": "ui_group",
+        "z": "",
+        "name": "24h Diagramm",
+        "tab": "1fedfbdc.3678e4",
+        "order": 1,
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "3a9da7b5.9d4be8",
+        "type": "ui_group",
+        "z": "",
+        "name": "1 Woche",
+        "tab": "7c2ac91f.f211b8",
+        "order": 1,
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "5a0260f7.427828",
+        "type": "ui_group",
+        "z": "",
+        "name": "Monat",
+        "tab": "882e20dd.fac48",
+        "order": 1,
+        "disp": true,
+        "width": "10",
+        "collapse": true
+    },
+    {
+        "id": "ff01d2ca.b11728",
+        "type": "ui_group",
+        "z": "",
+        "name": "Weegschaal",
+        "tab": "95811163.190cc",
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "95811163.190cc",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Weegschaal",
+        "icon": "dashboard"
+    },
+    {
+        "id": "8e2d342b.f57098",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "34ec4339.943e8c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Temperatur",
+        "format": "{{msg.payload}} °C",
+        "layout": "row-spread",
+        "x": 1630,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d7fffe76.924bf8",
+        "type": "json",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 650,
+        "y": 180,
+        "wires": [
+            [
+                "b4508ca4.d883d",
+                "c290fb3b.033c3",
+                "dce7f1ab.953168",
+                "454a82b7.a64574",
+                "ff5f4cfa.b4bba8",
+                "cb5cd923.275c38",
+                "a7f711a4.b3bf7",
+                "8adb6214.5a5068",
+                "ee7c4e1.da192b"
+            ]
+        ]
+    },
+    {
+        "id": "454a82b7.a64574",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "34ec4339.943e8c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Relative Luftfeuchtigkeit",
+        "format": "{{msg.payload[18].humidity}}%",
+        "layout": "row-spread",
+        "x": 1590,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "30836a92.144fbe",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "a8a5b009.d3d848",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Wind-Geschwindigkeit",
+        "format": "{{msg.payload}} Km/h",
+        "layout": "row-spread",
+        "x": 1600,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "21774b5e.da05d4",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "a8a5b009.d3d848",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Niederschlag",
+        "format": "{{msg.payload}} mm",
+        "layout": "row-spread",
+        "x": 1630,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "38a1d2d3.e9d87e",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "a8a5b009.d3d848",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Windrichtung",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 1630,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "a1bc2347.4b685",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "a8a5b009.d3d848",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Böen",
+        "format": "{{msg.payload}} Km/h",
+        "layout": "row-spread",
+        "x": 1650,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "b4508ca4.d883d",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Switch-Windrichtung",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "0",
+                "fromt": "num",
+                "to": "N",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "1",
+                "fromt": "str",
+                "to": "NNE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "2",
+                "fromt": "num",
+                "to": "NE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "3",
+                "fromt": "str",
+                "to": "ENE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "4",
+                "fromt": "num",
+                "to": "E",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "5",
+                "fromt": "num",
+                "to": "ESE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "6",
+                "fromt": "num",
+                "to": "SE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "7",
+                "fromt": "num",
+                "to": "SSE",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "8",
+                "fromt": "num",
+                "to": "S",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "9",
+                "fromt": "num",
+                "to": "SSW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "10",
+                "fromt": "num",
+                "to": "SW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "11",
+                "fromt": "num",
+                "to": "WSW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "12",
+                "fromt": "num",
+                "to": "W",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "13",
+                "fromt": "num",
+                "to": "WNW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "14",
+                "fromt": "num",
+                "to": "NW",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].wind_direction",
+                "pt": "msg",
+                "from": "15",
+                "fromt": "num",
+                "to": "NNW",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 320,
+        "wires": [
+            [
+                "fb385757.47cef"
+            ]
+        ]
+    },
+    {
+        "id": "c290fb3b.033c3",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Switch-Batterie",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload[\"18\"].battery_low",
+                "pt": "msg",
+                "from": "false",
+                "fromt": "bool",
+                "to": "1",
+                "tot": "num"
+            },
+            {
+                "t": "change",
+                "p": "payload[\"18\"].battery_low",
+                "pt": "msg",
+                "from": "true",
+                "fromt": "bool",
+                "to": "0",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 800,
+        "y": 360,
+        "wires": [
+            [
+                "e0ce9dfc.7f022"
+            ]
+        ]
+    },
+    {
+        "id": "e0ce9dfc.7f022",
+        "type": "ui_gauge",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "324baf54.96157",
+        "order": 4,
+        "width": "4",
+        "height": "4",
+        "gtype": "wave",
+        "title": "Batteriestand",
+        "label": "",
+        "format": "{{msg.payload[\"18\"].battery_low}}",
+        "min": "0",
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1620,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "6433330.b0df44c",
+        "type": "mqtt in",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "topic": "tinkerforge/bricklet/outdoor_weather/Es7/station_data",
+        "qos": "1",
+        "broker": "deb2ff16.bda1b8",
+        "x": 320,
+        "y": 180,
+        "wires": [
+            [
+                "d7fffe76.924bf8"
+            ]
+        ]
+    },
+    {
+        "id": "6e457f0d.f692c8",
+        "type": "ui_gauge",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "34ec4339.943e8c",
+        "order": 3,
+        "width": "5",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Temperatur",
+        "label": "°C",
+        "format": "{{msg.payload}}",
+        "min": "-20",
+        "max": "50",
+        "colors": [
+            "#375aab",
+            "#1be403",
+            "#ff0000"
+        ],
+        "seg1": "0",
+        "seg2": "28",
+        "x": 1630,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "3f6c6974.429e5e",
+        "type": "ui_gauge",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "a8a5b009.d3d848",
+        "order": 5,
+        "width": "4",
+        "height": "4",
+        "gtype": "compass",
+        "title": "Windkompass",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "min": 0,
+        "max": "15",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1620,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "d5d77a8c.4867d8",
+        "type": "http request",
+        "z": "cafc6456.030c58",
+        "name": "Call METAR Service",
+        "method": "GET",
+        "url": "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow=3&mostRecent=true&stationString={{{payload}}}",
+        "x": 260,
+        "y": 420,
+        "wires": [
+            [
+                "43e08796.12a308"
+            ]
+        ]
+    },
+    {
+        "id": "9feded9e.9ea328",
+        "type": "inject",
+        "z": "cafc6456.030c58",
+        "name": "Weather report",
+        "topic": "",
+        "payload": "/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow=3&mostRecent=true&stationString=LFSB",
+        "payloadType": "str",
+        "repeat": "600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 218,
+        "y": 196,
+        "wires": [
+            [
+                "8b333cce.f011f8"
+            ]
+        ]
+    },
+    {
+        "id": "43e08796.12a308",
+        "type": "xml",
+        "z": "cafc6456.030c58",
+        "name": "",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 427,
+        "y": 420,
+        "wires": [
+            [
+                "cc42ebe3.21b168",
+                "c043dd27.c8f3",
+                "a256014a.988d58",
+                "5f5837a3.f471a",
+                "21d65d6a.9a7b32"
+            ]
+        ]
+    },
+    {
+        "id": "555075e4.601d84",
+        "type": "comment",
+        "z": "cafc6456.030c58",
+        "name": "NOAA Weather data",
+        "info": "Retrieving Finningly Airport METAR feed",
+        "x": 207,
+        "y": 152,
+        "wires": []
+    },
+    {
+        "id": "cc42ebe3.21b168",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "Parse METAR",
+        "func": "var METARdata = msg.payload.response.data[0].METAR[0];\nvar windkt = METARdata.wind_speed_kt[0];\nvar windkph = (windkt*1.852);\nvar winddir = METARdata.wind_dir_degrees[0]\nvar gusts = windkt; //if wind_gust_kt is not present, value defaults to wind_speed_kt\n   if (typeof METARdata.wind_gust_kt != \"undefined\") {\n\t   gusts = METARdata.wind_gust_kt[0];\n       }\nvar visibility = METARdata.visibility_statute_mi[0]*1.852;       \nvar altim = METARdata.altim_in_hg[0];\nvar pressure = Math.round(altim * 33.8637526); //convert hg to mb\nvar dew = METARdata.dewpoint_c[0];\ndew = Math.round(dew);\nvar tempC = METARdata.temp_c[0];\nvar tempF = ((tempC*1.8)+32);\n\n//tempC=5;\n//dew = 15;\n//windkt=1;\n\n//August-Roche-Magnus approximation to calculate rh_hum\nvar constA = 17.625;\nvar constB = 243.04;\nvar rh_numer = 10000.0*Math.exp((constA*eval(dew))/(eval(dew)+constB));\nvar rh_denom = Math.exp((constA*eval(tempC))/(eval(tempC)+constB));\nvar rh_hum   = (rh_numer/rh_denom);\nvar humidityemon = Math.round(rh_hum);\nvar humidity = (humidityemon/100);\n\n//Wind Chill Index Calculations using the 'Joint Action Group for Temp Indices' (JAG TI) formula\nvar chill=(13.12+0.6215*tempC-11.37*Math.pow(windkph,0.16)+0.3965*tempC*Math.pow(windkph,0.16));\n\n//Calculate Apparent Temperature\n//firstly, Calculate Vapor pressure in kPa\nvar vaporp = ((6.11*Math.pow(10,(7.5*dew/(237.3 + dew))))/10);\n//apply Steadman's Apparent Temperature formula\nvar apptemp = -2.7+(1.04*tempC)+(2*vaporp)-(windkt*0.3343886);\n        \n//Calculation of 'feels like' temperature by using the 'chill factor' if\n//the temp is below 10degC, or 'apparent temp' if over 20degC, or if between\n//10 and 20degC using a linear interpolation of both.\nvar feels;\nif (tempC < 10.0) {\n\tfeels=chill;\n\t}\n\telse if (tempC > 20.0) {\n\tfeels=apptemp;\n\t}\n\t\telse {\n\t\tvar calcA=((tempC-10)/10);\n\t\tvar calcB=1-calcA;\n\t\tfeels=((apptemp*calcA)+(chill*calcB));\n\t\t}\n\nmsg.payload = { \n    wind: windkt,\n    gusts: gusts,\n    direction: winddir,\n    humidity: humidity,\n    dewpoint: dew,\n    pressure: pressure,\n    temperature: tempC,\n    visibility: visibility,\n    feels:feels\n    };\nreturn msg;",
+        "outputs": 1,
+        "x": 592,
+        "y": 490,
+        "wires": [
+            [
+                "776c8772.7c8688",
+                "35bb4dc7.516902",
+                "fa741545.c32928",
+                "b0610cf6.3238",
+                "42123197.e13f1",
+                "7df2186a.2c20e8",
+                "872a08c4.b0fb98",
+                "e270146c.26094"
+            ]
+        ]
+    },
+    {
+        "id": "ad56203f.fc007",
+        "type": "http response",
+        "z": "cafc6456.030c58",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 680,
+        "y": 1047,
+        "wires": []
+    },
+    {
+        "id": "d60865f4.478e2",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "HTML Page",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!doctype html>\n<head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>METAR Dashboard</title>\n    <style>\n        body {\n            font-family: \"arial\";\n        }\n        table.led {\n            width:1300px;\n        }\n        td.led {\n            width: 60px;\n            max-width: 60px;\n            overflow: hidden;\n            text-align: center;\n            font-size: 70%\n        }\n    </style>\n</head>\n<body onload=\"init();\">\n<p>\n  <div id=\"flash\"></div>\n</p>\n<canvas id=\"gaugeCanvas0\">No canvas in your browser...sorry...</canvas>\n<canvas id=\"gaugeCanvas1\"></canvas>\n<canvas id=\"gaugeCanvas2\"></canvas>\n<canvas id=\"gaugeCanvas3\"></canvas>\n<canvas id=\"gaugeCanvas4\"></canvas>\n<canvas id=\"gaugeCanvas5\"></canvas>\n<canvas id=\"gaugeCanvas6\"></canvas>\n<canvas id=\"gaugeCanvas7\"></canvas>\n<table class=\"led\">\n    <tr id=\"leds\">\n        <td class=\"led\"><canvas id=\"led0\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led1\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led2\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led3\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led4\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led5\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led6\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led7\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led8\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led9\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led10\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led11\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led12\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led13\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led14\" width=\"50\" height=\"50\"></canvas></td>\n        <td class=\"led\"><canvas id=\"led15\" width=\"50\" height=\"50\"></canvas></td>\n    </tr>\n    <tr id=\"labels\">\n        <td class=\"led\" id=\"lable0\"></td>\n        <td class=\"led\" id=\"lable1\"></td>\n        <td class=\"led\" id=\"lable2\"></td>\n        <td class=\"led\" id=\"lable3\"></td>\n        <td class=\"led\" id=\"lable4\"></td>\n        <td class=\"led\" id=\"lable5\"></td>\n        <td class=\"led\" id=\"lable6\"></td>\n        <td class=\"led\" id=\"lable7\"></td>\n        <td class=\"led\" id=\"lable8\"></td>\n        <td class=\"led\" id=\"lable9\"></td>\n        <td class=\"led\" id=\"lable10\"></td>\n        <td class=\"led\" id=\"lable11\"></td>\n        <td class=\"led\" id=\"lable12\"></td>\n        <td class=\"led\" id=\"lable13\"></td>\n        <td class=\"led\" id=\"lable14\"></td>\n        <td class=\"led\" id=\"lable15\"></td>\n        <td class=\"led\" id=\"lable16\"></td>\n    </tr>\n</table>\n</body>\n<script type=text/javascript src=\"https://rawgit.com/HanSolo/SteelSeries-Canvas/master/tween.js\"></script>\n<script type=text/javascript src=\"https://rawgit.com/HanSolo/SteelSeries-Canvas/master/steelseries.js\"></script>\n<script>\n    var radials = [];\n    var leds = [];\n    var connection;\n\n    function init()\n    {\n        for (var i=0;i<7;i++) {\n            radials[i] = new steelseries.Radial('gaugeCanvas'+i, {\n                frameDesign: steelseries.FrameDesign.TILTED_GRAY,\n                gaugeType: steelseries.GaugeType.TYPE4,\n                backgroundColor : steelseries.BackgroundColor.WHITE,\n                ledVisible: false,\n                minValue:0,\n                maxValue:100,\n                size: 301,\n            });\n            radials[i].setThresholdVisible(false);\n            radials[i].setValue(0);\n        }\n        radials[7] = new steelseries.WindDirection('gaugeCanvas7', {\n                frameDesign: steelseries.FrameDesign.TILTED_GRAY,\n                gaugeType: steelseries.GaugeType.TYPE4,\n                backgroundColor : steelseries.BackgroundColor.WHITE,\n                size: 301,\n                lcdVisible: false\n            });\n        for (i=0;i<16;i++) {\n            leds[i] = new steelseries.Led('led'+i, {size: 50});\n        }\n    }\n\n    connect();\n\n    function onConnect() {\n        leds[0].setLedOnOff(true);\n        console.log(\"connected\");\n        connection.send(\"Request Data\");\n    };\n\n    function onClose() {\n        leds[0].setLedOnOff(false);\n        console.log(\"disconnected\");\n        setTimeout(function() { connect()},5000);\n    }\n\n    function onMessage(msg) {\n        flash(leds[1]);\n        console.log(msg);\n        var data=JSON.parse(msg.data);\n        var radial = radials[data.radial];\n        var led = leds[data.led];\n        if (led && data.status) {\n            if (data.status == 'flash')\n                flash(led,data.duration || 400);\n            else\n                led.setLedOnOff(data.status.toUpperCase()==\"ON\");\n\n        }\n        if (led && data.color) {\n            led.setLedColor(steelseries.LedColor[data.color.toUpperCase()+\"_LED\"]);\n        }\n        if (radial && data.max) {\n            radial.setMaxValue(data.max);\n        }\n        if (radial && data.min) {\n            radial.setMinValue(data.min);\n        }\n        if (radial && data.value) {\n            if (radial.setValueAnimated) {\n                radial.setValueAnimated(data.value);\n            } else if (radial.setValueAnimatedLatest) {\n                radial.setValueAnimatedLatest(data.value);\n                radial.setValueAnimatedAverage(data.value);\n            } else {\n                radial.setValue(data.value);\n            }\n        }\n        if (radial && data.odo) {\n            radial.setOdoValue(data.odo);\n        }\n        if (data.title) {\n            if (radial)\n                radial.setTitleString(data.title);\n            if (led)\n                document.getElementById(\"lable\"+data.led).innerHTML = data.title;\n\n        }\n        if (radial && data.unit) {\n            radial.setUnitString(data.unit)\n        }\n        if (data.flash) {\n                document.getElementById(\"flash\").innerHTML = data.flash;\n        }\n    }\n\n    function connect(cause) {\n        if (cause)\n            console.log(cause.errorMessage);\n        const hostname = window.location.hostname || \"raspi2\"\n        const port = window.location.port || 1880;\n        const url = \"ws://\" + hostname + \":\" + port + \"/ws/dashboard\";\n        connection=new WebSocket(url);\n        connection.onopen=onConnect;\n        connection.onclose=onClose;\n        // Log errors\n        connection.onerror = function (error) {\n            flash(leds[2]);\n            console.log('WebSocket Error ' + error);\n        };\n\n        // Log messages from the server\n        connection.onmessage = onMessage;\n    }\n\n    function flash(led,duration) {\n        led.setLedOnOff(true);\n        setTimeout(function() { led.setLedOnOff(false)},duration || 400);\n    }\n</script>",
+        "x": 526,
+        "y": 1047,
+        "wires": [
+            [
+                "ad56203f.fc007"
+            ]
+        ]
+    },
+    {
+        "id": "89e05ea8.347f68",
+        "type": "http in",
+        "z": "cafc6456.030c58",
+        "name": "",
+        "url": "/metar",
+        "method": "get",
+        "x": 196,
+        "y": 1047,
+        "wires": [
+            [
+                "cf9ba475.d943f8",
+                "733cdb64.6a696c"
+            ]
+        ]
+    },
+    {
+        "id": "ab604d4a.a826a8",
+        "type": "websocket out",
+        "z": "cafc6456.030c58",
+        "name": "",
+        "server": "ed8008fb.de3868",
+        "client": "",
+        "x": 1073,
+        "y": 928,
+        "wires": []
+    },
+    {
+        "id": "776c8772.7c8688",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "Temp2Radial",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n    \"radial\" : 0,\n    \"value\" : {{payload.temperature}},\n    \"max\" : 50,\n    \"unit\" : \"°C\",\n    \"title\" : \"Temperature\"\n}\n",
+        "x": 825,
+        "y": 492,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "35bb4dc7.516902",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "Wind2Radial",
+        "field": "payload",
+        "format": "handlebars",
+        "template": "{\n    \"radial\" : 6,\n    \"value\" : {{payload.wind}},\n    \"max\" : 80,\n    \"unit\" : \"kt\",\n    \"title\" : \"Wind\"\n}\n",
+        "x": 822,
+        "y": 817,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "fa741545.c32928",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "Hum2Radial",
+        "field": "payload",
+        "format": "handlebars",
+        "template": "{\n    \"radial\" : 2,\n    \"value\" : {{payload.humidity}},\n    \"max\" : 100,\n    \"unit\" : \"%\",\n    \"title\" : \"Humidity\"\n}\n",
+        "x": 826,
+        "y": 601,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "b0610cf6.3238",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "Pres2Radial",
+        "field": "payload",
+        "format": "handlebars",
+        "template": "{\n    \"radial\" : 4,\n    \"value\" : {{payload.pressure}},\n    \"min\" : 900,\n    \"max\" : 1100,\n    \"unit\" : \"hPa\",\n    \"title\" : \"Pressure\"\n}\n",
+        "x": 824,
+        "y": 706,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "574b6cdc.6a852c",
+        "type": "websocket in",
+        "z": "cafc6456.030c58",
+        "name": "",
+        "server": "ed8008fb.de3868",
+        "client": "",
+        "x": 219,
+        "y": 927,
+        "wires": [
+            [
+                "8e54d51.c41c5a8",
+                "8b333cce.f011f8"
+            ]
+        ]
+    },
+    {
+        "id": "42123197.e13f1",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "Dew2Radial",
+        "field": "payload",
+        "format": "handlebars",
+        "template": "{\n    \"radial\" : 3,\n    \"value\" : {{payload.dewpoint}},\n    \"max\" : 50,\n    \"unit\" : \"°C\",\n    \"title\" : \"Dew\"\n}\n",
+        "x": 824,
+        "y": 657,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "7df2186a.2c20e8",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "Feels2Radial",
+        "field": "payload",
+        "format": "handlebars",
+        "template": "{\n    \"radial\" : 1,\n    \"value\" : {{payload.feels}},\n    \"max\" : 50,\n    \"unit\" : \"°C\",\n    \"title\" : \"Feels\"\n}\n",
+        "x": 827,
+        "y": 545,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "872a08c4.b0fb98",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "Vis2Radial",
+        "field": "payload",
+        "format": "handlebars",
+        "template": "{\n    \"radial\" : 5,\n    \"value\" : {{payload.visibility}},\n    \"max\" : 10,\n    \"unit\" : \"km\",\n    \"title\" : \"Visibility\"\n}\n",
+        "x": 823,
+        "y": 758,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "e270146c.26094",
+        "type": "template",
+        "z": "cafc6456.030c58",
+        "name": "Dir2Radial",
+        "field": "payload",
+        "format": "handlebars",
+        "template": "{\n    \"radial\" : 7,\n    \"value\" : {{payload.direction}}\n}\n",
+        "x": 823,
+        "y": 868,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "c043dd27.c8f3",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to VFR LED",
+        "func": "var report=msg.payload.response.data[0].METAR[0];\nvar conditions=report.flight_category;\nmsg.payload = {\n    \"led\" : 3,\n    \"status\" : \"ON\",\n    \"color\" :  conditions == \"VFR\" ? \"green\" : conditions == \"MVFR\" ? \"yellow\" : \"red\",\n    \"title\" : \"VFR\"\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 877,
+        "y": 421,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "244e186a.63c74",
+        "type": "websocket out",
+        "z": "cafc6456.030c58",
+        "name": "",
+        "server": "ed8008fb.de3868",
+        "client": "",
+        "x": 1166,
+        "y": 421,
+        "wires": []
+    },
+    {
+        "id": "8e54d51.c41c5a8",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "Init Status LEDs",
+        "func": "msgs = [];\n\nmsgs.push({payload:{ \n    \"title\" : \"Connect\",\n    \"led\" : 0,\n    \"color\" : \"blue\"\n}});\nmsgs.push({payload:{ \n    \"title\" : \"Error\",\n    \"led\" : 2,\n    \"status\" : \"flash\",\n    \"color\" : \"red\"\n}});\nmsgs.push({payload:{ \n    \"title\" : \"Data\",\n    \"led\" : 1,\n    \"status\" : \"flash\",\n    \"color\" : \"yellow\"\n}});\nreturn [msgs];",
+        "outputs": 1,
+        "x": 503,
+        "y": 927,
+        "wires": [
+            [
+                "ab604d4a.a826a8"
+            ]
+        ]
+    },
+    {
+        "id": "a256014a.988d58",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "Extract raw METAR",
+        "func": "msg.payload=msg.payload.response.data[0].METAR[0].raw_text[0];\nreturn msg;",
+        "outputs": 1,
+        "x": 626,
+        "y": 226,
+        "wires": [
+            [
+                "f1b04b63.12456",
+                "ec3cc837.8ccac",
+                "a9ffda83.d78c58"
+            ]
+        ]
+    },
+    {
+        "id": "f1b04b63.12456",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to NOSIG LED",
+        "func": "msg.payload = {\n    \"led\" : 4,\n    \"status\" : msg.payload.indexOf(\"NOSIG\") > -1 ? \"ON\" : \"OFF\",\n    \"color\" : \"green\",\n    \"title\" : \"NOSIG\"\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 904,
+        "y": 107,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "ec3cc837.8ccac",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to CAVOK LED",
+        "func": "msg.payload = {\n    \"led\" : 5,\n    \"status\" : msg.payload.indexOf(\"CAVOK\") > -1 ? \"ON\" : \"OFF\",\n    \"color\" : \"green\",\n    \"title\" : \"CAVOK\"\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 902,
+        "y": 64,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "a9ffda83.d78c58",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to Flash Message",
+        "func": "msg.payload = {\n    \"flash\" : msg.payload\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 910,
+        "y": 370,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "e5bf7572.891188",
+        "type": "comment",
+        "z": "cafc6456.030c58",
+        "name": "Send HTML Page",
+        "info": "",
+        "x": 215,
+        "y": 999,
+        "wires": []
+    },
+    {
+        "id": "795bb112.35da58",
+        "type": "comment",
+        "z": "cafc6456.030c58",
+        "name": "Respond to ping message",
+        "info": "",
+        "x": 242,
+        "y": 877,
+        "wires": []
+    },
+    {
+        "id": "af7b7a2.faef188",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to DIZZELE LED",
+        "func": "msg.payload = {\n    \"led\" : 6,\n    \"status\" : msg.payload.indexOf(\"DZ\") > -1 ? \"ON\" : \"OFF\",\n    \"color\" : \"yellow\",\n    \"title\" : \"Dizzle\"\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 902,
+        "y": 148,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "1a835374.985785",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to RAIN LED",
+        "func": "msg.payload = {\n    \"led\" : 7,\n    \"status\" : msg.payload.indexOf(\"RA\") > -1 ? \"ON\" : \"OFF\",\n    \"color\" : \"yellow\",\n    \"title\" : \"Rain\"\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 905,
+        "y": 193,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "1f548493.b47433",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to TS LED",
+        "func": "msg.payload = {\n    \"led\" : 8,\n    \"status\" : msg.payload.indexOf(\"TS\") > -1 ? \"ON\" : \"OFF\",\n    \"color\" : \"red\",\n    \"title\" : \"Thunderstorm\"\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 906,
+        "y": 242,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "cf9ba475.d943f8",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "Set Station",
+        "func": "if (msg.payload.station) {\n    context.global.station=msg.payload.station;\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 357,
+        "y": 1047,
+        "wires": [
+            [
+                "d60865f4.478e2"
+            ]
+        ]
+    },
+    {
+        "id": "8b333cce.f011f8",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "Set Metar Station",
+        "func": "msg.payload=context.global.station || \"LFSB\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 237,
+        "y": 295,
+        "wires": [
+            [
+                "d5d77a8c.4867d8"
+            ]
+        ]
+    },
+    {
+        "id": "733cdb64.6a696c",
+        "type": "debug",
+        "z": "cafc6456.030c58",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 370,
+        "y": 1113,
+        "wires": []
+    },
+    {
+        "id": "5f5837a3.f471a",
+        "type": "debug",
+        "z": "cafc6456.030c58",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "payload.response.data",
+        "x": 656,
+        "y": 445,
+        "wires": []
+    },
+    {
+        "id": "be8d1926.8cd82",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to FG LED",
+        "func": "msg.payload = {\n    \"led\" : 9,\n    \"status\" : msg.payload.indexOf(\"FG\") > -1 ? \"ON\" : \"OFF\",\n    \"color\" : \"red\",\n    \"title\" : \"Fog\"\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 907,
+        "y": 285,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "8e3cec95.c421",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "to SN LED",
+        "func": "msg.payload = {\n    \"led\" : 10,\n    \"status\" : msg.payload.indexOf(\"SN\") > -1 ? \"ON\" : \"OFF\",\n    \"color\" : \"red\",\n    \"title\" : \"Snow\"\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 906,
+        "y": 327,
+        "wires": [
+            [
+                "244e186a.63c74"
+            ]
+        ]
+    },
+    {
+        "id": "21d65d6a.9a7b32",
+        "type": "function",
+        "z": "cafc6456.030c58",
+        "name": "Extract WX String",
+        "func": "var wx=msg.payload.response.data[0].METAR[0].wx_string;\nmsg.payload=wx ? wx.join(): \"\";\nreturn msg;",
+        "outputs": 1,
+        "x": 627,
+        "y": 112,
+        "wires": [
+            [
+                "af7b7a2.faef188",
+                "1a835374.985785",
+                "1f548493.b47433",
+                "be8d1926.8cd82",
+                "8e3cec95.c421"
+            ]
+        ]
+    },
+    {
+        "id": "4b1fe408.0aa0a4",
+        "type": "inject",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "topic": "",
+        "payload": "sunmoon",
+        "payloadType": "global",
+        "repeat": "3600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "acc8cc73.c7d3c"
+            ]
+        ]
+    },
+    {
+        "id": "acc8cc73.c7d3c",
+        "type": "http request",
+        "z": "d2ae4183.6160a8",
+        "name": "SunriseAPI",
+        "method": "GET",
+        "ret": "obj",
+        "url": "https://api.sunrise-sunset.org/json?lat=47.482790&lng=7.735810&date=today&formatted=0",
+        "tls": "",
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "57f026ab.a728b8"
+            ]
+        ]
+    },
+    {
+        "id": "188560f.d050f9f",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Sonnenaufgang",
+        "format": "{{payload.sunrise}}",
+        "layout": "row-spread",
+        "x": 1540,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "ecc60bb8.dd447",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Sonnenuntergang",
+        "format": "{{payload.sunset}}",
+        "layout": "row-spread",
+        "x": 1550,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "3f516579.99f89a",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Sonnenhöchststand",
+        "format": "{{payload.solar_noon}}",
+        "layout": "row-spread",
+        "x": 1560,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "f25445bf.52078",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Tageslänge In Stunden, Minuten und Sekunden",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 1640,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "57f026ab.a728b8",
+        "type": "split",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": "10",
+        "arraySpltType": "len",
+        "stream": true,
+        "addname": "",
+        "x": 490,
+        "y": 100,
+        "wires": [
+            [
+                "a8a8ad45.cba2"
+            ]
+        ]
+    },
+    {
+        "id": "a8a8ad45.cba2",
+        "type": "split",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": "8",
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 630,
+        "y": 100,
+        "wires": [
+            [
+                "49364ed1.a7ecd"
+            ]
+        ]
+    },
+    {
+        "id": "49364ed1.a7ecd",
+        "type": "switch",
+        "z": "d2ae4183.6160a8",
+        "name": "Tageslängeswitch",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "istype",
+                "v": "number",
+                "vt": "number"
+            },
+            {
+                "t": "eq",
+                "v": "OK",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": true,
+        "outputs": 3,
+        "x": 790,
+        "y": 100,
+        "wires": [
+            [
+                "1586242.d7bb1dc"
+            ],
+            [],
+            [
+                "1a828cb3.da8903"
+            ]
+        ]
+    },
+    {
+        "id": "1586242.d7bb1dc",
+        "type": "function",
+        "z": "d2ae4183.6160a8",
+        "name": "[s] to [hh:mm:ss]",
+        "func": "// Message from preceeding node is in seconds - should be less than 24 hours (86400 seconds).\nvar time = (new Date(msg.payload * 1000)).toUTCString().match(/(\\d\\d:\\d\\d:\\d\\d)/)[0];\n// Pass on the string to the next node, what ever that may be. (groov Data Store for example).\nmsg.payload = time;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1140,
+        "y": 220,
+        "wires": [
+            [
+                "f25445bf.52078"
+            ]
+        ]
+    },
+    {
+        "id": "8c649bdf.65b648",
+        "type": "ui_button",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "group": "4c314516.d65d0c",
+        "order": 12,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Mehr Informationen",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "payload",
+        "payloadType": "global",
+        "topic": "",
+        "x": 1570,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "52861453.c5842c",
+        "type": "ui_button",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "group": "4c314516.d65d0c",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Referenz",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "link",
+        "payloadType": "global",
+        "topic": "",
+        "x": 1760,
+        "y": 60,
+        "wires": [
+            [
+                "f670a413.822ab8"
+            ]
+        ]
+    },
+    {
+        "id": "f670a413.822ab8",
+        "type": "nbrowser",
+        "z": "d2ae4183.6160a8",
+        "name": "Ref",
+        "methods": [
+            {
+                "name": "gotoURL",
+                "func": "goto",
+                "params": [
+                    {
+                        "type": "str",
+                        "value": "https://sunrise-sunset.org",
+                        "typeDefault": "str"
+                    }
+                ]
+            }
+        ],
+        "prop": "nbrowser",
+        "propout": "payload",
+        "object": "msg",
+        "objectout": "msg",
+        "close": false,
+        "show": true,
+        "ssl": false,
+        "outputs": 1,
+        "x": 1910,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c820648d.8b4518",
+        "type": "string",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "methods": [
+            {
+                "name": "between",
+                "params": [
+                    {
+                        "type": "str",
+                        "value": "T"
+                    },
+                    {
+                        "type": "str",
+                        "value": "."
+                    }
+                ]
+            },
+            {
+                "name": "left",
+                "params": [
+                    {
+                        "type": "num",
+                        "value": "5"
+                    }
+                ]
+            }
+        ],
+        "prop": "payload",
+        "propout": "payload",
+        "object": "msg",
+        "objectout": "msg",
+        "x": 1170,
+        "y": 120,
+        "wires": [
+            [
+                "ff3004e3.7f6f58"
+            ]
+        ]
+    },
+    {
+        "id": "ff3004e3.7f6f58",
+        "type": "join",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "mode": "auto",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 1310,
+        "y": 120,
+        "wires": [
+            [
+                "188560f.d050f9f",
+                "ecc60bb8.dd447",
+                "3f516579.99f89a",
+                "9fdc28d5.5cc9e",
+                "10f6cfad.906b4",
+                "d293f2d.175f31",
+                "8982ce17.06af3",
+                "b9442e7a.20372",
+                "4bdf2e96.5e40e"
+            ]
+        ]
+    },
+    {
+        "id": "1a828cb3.da8903",
+        "type": "moment",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "topic": "",
+        "input": "payload",
+        "inputType": "msg",
+        "inTz": "Europe/Zurich",
+        "adjAmount": "2",
+        "adjType": "hours",
+        "adjDir": "add",
+        "format": "",
+        "locale": "de_CH",
+        "output": "payload",
+        "outputType": "msg",
+        "outTz": "Europe/Zurich",
+        "x": 1000,
+        "y": 120,
+        "wires": [
+            [
+                "c820648d.8b4518"
+            ]
+        ]
+    },
+    {
+        "id": "9fdc28d5.5cc9e",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Zivile Dämmerung Anfang",
+        "format": "{{payload.civil_twilight_begin}}",
+        "layout": "row-spread",
+        "x": 1570,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "10f6cfad.906b4",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Zivile Dämmerung Ende",
+        "format": "{{payload.civil_twilight_end}}",
+        "layout": "row-spread",
+        "x": 1570,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "d293f2d.175f31",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Nautische Dämmerung Anfang",
+        "format": "{{payload.nautical_twilight_begin}}",
+        "layout": "row-spread",
+        "x": 1590,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8982ce17.06af3",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Nautische Dämmerung Ende",
+        "format": "{{payload.nautical_twilight_end}}",
+        "layout": "row-spread",
+        "x": 1580,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "4bdf2e96.5e40e",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Astronomische Dämmerung Ende",
+        "format": "{{payload.astronomical_twilight_end}}",
+        "layout": "row-spread",
+        "x": 1600,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "b9442e7a.20372",
+        "type": "ui_text",
+        "z": "d2ae4183.6160a8",
+        "group": "4c314516.d65d0c",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Astronomische Dämmerung Anfang",
+        "format": "{{payload.astronomical_twilight_begin}}",
+        "layout": "row-spread",
+        "x": 1600,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "866fcbb7.d9877",
+        "type": "mqtt out",
+        "z": "8da6ffba.2df618",
+        "name": "Stationsdaten",
+        "topic": "tinkerforge/bricklet/outdoor_weather/Es7/station_data",
+        "qos": "0",
+        "retain": "",
+        "broker": "deb2ff16.bda1b8",
+        "x": 200,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3724dc1b.b66b9c",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "DiagrammdatenJoin",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "7",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1560,
+        "y": 160,
+        "wires": [
+            [
+                "ee76b8ca.31ce48"
+            ]
+        ]
+    },
+    {
+        "id": "ee7c4e1.da192b",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Topic Temperatur",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Temperatur",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[\"18\"].temperature",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(((payload)/10), 1)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 280,
+        "wires": [
+            [
+                "3724dc1b.b66b9c",
+                "6e457f0d.f692c8",
+                "8e2d342b.f57098",
+                "c3c68092.eb3bb"
+            ]
+        ]
+    },
+    {
+        "id": "ff5f4cfa.b4bba8",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Topic LF",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Luftfeuchtigkeit",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[\"18\"].humidity",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 80,
+        "wires": [
+            [
+                "3724dc1b.b66b9c",
+                "c3c68092.eb3bb"
+            ]
+        ]
+    },
+    {
+        "id": "a7f711a4.b3bf7",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Topic/Berechnung WG",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Windgeschwindigkeit",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[18].wind_speed",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round((((payload)/10)*3.6), 1)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1100,
+        "y": 200,
+        "wires": [
+            [
+                "3724dc1b.b66b9c",
+                "30836a92.144fbe",
+                "99e06368.e906a"
+            ]
+        ]
+    },
+    {
+        "id": "cb5cd923.275c38",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Topic/Berechnung Böen",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Böen",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[18].gust_speed",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round((((payload)/10)*3.6), 1)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1110,
+        "y": 240,
+        "wires": [
+            [
+                "3724dc1b.b66b9c",
+                "a1bc2347.4b685",
+                "99e06368.e906a"
+            ]
+        ],
+        "inputLabels": [
+            "msg.gust_speded"
+        ],
+        "outputLabels": [
+            "msg.payload"
+        ]
+    },
+    {
+        "id": "8adb6214.5a5068",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Topic/Berechnung Niederschlag",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Niederschlag",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[18].rain",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload/10",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1130,
+        "y": 160,
+        "wires": [
+            [
+                "3724dc1b.b66b9c",
+                "21774b5e.da05d4",
+                "695d9850.02cdd8"
+            ]
+        ]
+    },
+    {
+        "id": "fb385757.47cef",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Topic Windrichtung",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Windrichtung",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[\"18\"].wind_direction",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 320,
+        "wires": [
+            [
+                "3724dc1b.b66b9c",
+                "3f6c6974.429e5e",
+                "38a1d2d3.e9d87e"
+            ]
+        ]
+    },
+    {
+        "id": "dce7f1ab.953168",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Timestamp",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Timestamp",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload._timestamp",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1070,
+        "y": 120,
+        "wires": [
+            [
+                "3724dc1b.b66b9c"
+            ]
+        ]
+    },
+    {
+        "id": "8ea50bfb.837938",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2180,
+        "y": 160,
+        "wires": [
+            [
+                "afff47de.aa8f68",
+                "11e30a36.92a176",
+                "6043b1f9.0aba8",
+                "50cf0adf.d625c4"
+            ]
+        ]
+    },
+    {
+        "id": "e9b41af6.7b75f",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Postgres-DB",
+        "func": "var pl = msg.payload;\nmsg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: 'insert into adaten (timestamp, daten, zeit, datum) values ($1, $2, $3, $4)',\n        params: ['now', pl, 'now', 'today'],\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2010,
+        "y": 160,
+        "wires": [
+            [
+                "8ea50bfb.837938"
+            ]
+        ]
+    },
+    {
+        "id": "ee76b8ca.31ce48",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "Topic Diagrammdaten",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Diagrammdaten",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1800,
+        "y": 160,
+        "wires": [
+            [
+                "e9b41af6.7b75f",
+                "3176e6e1.04d97a"
+            ]
+        ]
+    },
+    {
+        "id": "6e1318a0.b60f4",
+        "type": "postgres",
+        "z": "648f64e1.82d27c",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 920,
+        "y": 60,
+        "wires": [
+            [
+                "c8766006.87bf4"
+            ]
+        ]
+    },
+    {
+        "id": "41afac09.4baefc",
+        "type": "function",
+        "z": "648f64e1.82d27c",
+        "name": "Select 1h",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT avg5m ->'temperatur' AS Temperatur, avg5m ->'luftfeuchtigkeit' AS Luftfeuchtigkeit, timestamp AS Zeit FROM _5min WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 60,
+        "wires": [
+            [
+                "6e1318a0.b60f4"
+            ]
+        ]
+    },
+    {
+        "id": "450e87e.84f7778",
+        "type": "ui_chart",
+        "z": "648f64e1.82d27c",
+        "name": "1h data",
+        "group": "c75fb9ed.300d68",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "label": "Temperatur und Luftfeuchtigkeit 1h",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#0080ff",
+            "#008000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1260,
+        "y": 60,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "c8766006.87bf4",
+        "type": "change",
+        "z": "648f64e1.82d27c",
+        "name": "Format data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "(\t  $series := [\t    { \"field\": \"temperatur\", \"label\": \"Temperatur °C\" },\t    { \"field\": \"luftfeuchtigkeit\", \"label\": \"Luftfeuchtigkeit %\" }\t  ];\t  $xaxis := \"zeit\";\t  [\t    {\t      \"series\": $series.label,\t      \"data\": $series.[\t        (\t          $yaxis := $.field;\t          $$.payload.{\t            \"x\": $lookup($, $xaxis),\t            \"y\": $lookup($, $yaxis)\t          }\t        )\t      ]\t    }\t  ]\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 60,
+        "wires": [
+            [
+                "450e87e.84f7778"
+            ]
+        ]
+    },
+    {
+        "id": "f080cf01.d8d7b8",
+        "type": "postgres",
+        "z": "648f64e1.82d27c",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 920,
+        "y": 180,
+        "wires": [
+            [
+                "47d54f68.02b038"
+            ]
+        ]
+    },
+    {
+        "id": "bc49a5aa.f7182",
+        "type": "function",
+        "z": "648f64e1.82d27c",
+        "name": "Select 24h",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT avg1h ->'temperatur' AS Temperatur, avg1h ->'luftfeuchtigkeit' AS Luftfeuchtigkeit, timestamp AS Zeit FROM _1h WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 180,
+        "wires": [
+            [
+                "f080cf01.d8d7b8"
+            ]
+        ]
+    },
+    {
+        "id": "47d54f68.02b038",
+        "type": "change",
+        "z": "648f64e1.82d27c",
+        "name": "Format data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "(\t  $series := [\t    { \"field\": \"temperatur\", \"label\": \"Temperatur °C\" },\t    { \"field\": \"luftfeuchtigkeit\", \"label\": \"Luftfeuchtigkeit %\" }\t    ];\t  $xaxis := \"zeit\";\t  [\t    {\t      \"series\": $series.label,\t      \"data\": $series.[\t        (\t          $yaxis := $.field;\t          $$.payload.{\t            \"x\": $lookup($, $xaxis),\t            \"y\": $lookup($, $yaxis)\t          }\t        )\t      ]\t    }\t  ]\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 180,
+        "wires": [
+            [
+                "86331459.f49428"
+            ]
+        ]
+    },
+    {
+        "id": "b2bce7d2.af6648",
+        "type": "postgres",
+        "z": "648f64e1.82d27c",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 920,
+        "y": 300,
+        "wires": [
+            [
+                "cb913948.e02b98"
+            ]
+        ]
+    },
+    {
+        "id": "2ffcdaef.ead556",
+        "type": "function",
+        "z": "648f64e1.82d27c",
+        "name": "Select 1 week",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT daten ->'Temperatur' AS Temperatur, daten ->'Luftfeuchtigkeit' AS Luftfeuchtigkeit, timestamp AS Zeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 week'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 740,
+        "y": 300,
+        "wires": [
+            [
+                "b2bce7d2.af6648"
+            ]
+        ]
+    },
+    {
+        "id": "537ef730.70ecd",
+        "type": "ui_chart",
+        "z": "648f64e1.82d27c",
+        "name": "1 week data",
+        "group": "3a9da7b5.9d4be8",
+        "order": 2,
+        "width": "8",
+        "height": "4",
+        "label": "Temperatur und Luftfeuchtigkeit 1 Woche",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "D/M",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "604800",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#00e68c",
+            "#2d2da8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1270,
+        "y": 300,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "cb913948.e02b98",
+        "type": "change",
+        "z": "648f64e1.82d27c",
+        "name": "Format data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "(\t  $series := [\t  { \"field\": \"temperatur\", \"label\": \"Temperatur °C\" },\t    { \"field\": \"luftfeuchtigkeit\", \"label\": \"Luftfeuchtigkeit %\" }\t   ];\t  $xaxis := \"zeit\";\t  [\t    {\t      \"series\": $series.label,\t      \"data\": $series.[\t        (\t          $yaxis := $.field;\t          $$.payload.{\t            \"x\": $lookup($, $xaxis),\t            \"y\": $lookup($, $yaxis)\t          }\t        )\t      ]\t    }\t  ]\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 300,
+        "wires": [
+            [
+                "537ef730.70ecd"
+            ]
+        ]
+    },
+    {
+        "id": "fdcc0ece.4a1588",
+        "type": "ui_button",
+        "z": "648f64e1.82d27c",
+        "name": "",
+        "group": "c75fb9ed.300d68",
+        "order": 3,
+        "width": "4",
+        "height": "1",
+        "passthru": true,
+        "label": "Aktualisieren",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "date",
+        "topic": "",
+        "x": 210,
+        "y": 200,
+        "wires": [
+            [
+                "41afac09.4baefc",
+                "cafb5b51.cc195"
+            ]
+        ]
+    },
+    {
+        "id": "fda48e07.b4705",
+        "type": "postgres",
+        "z": "648f64e1.82d27c",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 920,
+        "y": 100,
+        "wires": [
+            [
+                "97414663.ac976"
+            ]
+        ]
+    },
+    {
+        "id": "cafb5b51.cc195",
+        "type": "function",
+        "z": "648f64e1.82d27c",
+        "name": "Select 1h",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT avg5m ->'windgeschwindigkeit' AS Windgeschwindigkeit, avg5m ->'böen' AS Böen, timestamp AS Zeit FROM _5min WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 100,
+        "wires": [
+            [
+                "fda48e07.b4705"
+            ]
+        ]
+    },
+    {
+        "id": "980ab1f7.2b3d88",
+        "type": "ui_chart",
+        "z": "648f64e1.82d27c",
+        "name": "1h data",
+        "group": "c75fb9ed.300d68",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Windgeschwindigkeit und Böen 1h",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#00e68c",
+            "#2d2da8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1260,
+        "y": 100,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "97414663.ac976",
+        "type": "change",
+        "z": "648f64e1.82d27c",
+        "name": "Format data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "(\t  $series := [\t    { \"field\": \"böen\", \"label\": \"Böen Km/h\" },\t    { \"field\": \"windgeschwindigkeit\", \"label\": \"Windgeschwindigkeit Km/h\" }\t  ];\t  $xaxis := \"zeit\";\t  [\t    {\t      \"series\": $series.label,\t      \"data\": $series.[\t        (\t          $yaxis := $.field;\t          $$.payload.{\t            \"x\": $lookup($, $xaxis),\t            \"y\": $lookup($, $yaxis)\t          }\t        )\t      ]\t    }\t  ]\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 100,
+        "wires": [
+            [
+                "980ab1f7.2b3d88"
+            ]
+        ]
+    },
+    {
+        "id": "f3726f37.a26ab8",
+        "type": "postgres",
+        "z": "648f64e1.82d27c",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 920,
+        "y": 220,
+        "wires": [
+            [
+                "56eeee14.1dfba8"
+            ]
+        ]
+    },
+    {
+        "id": "2e210f61.fb7338",
+        "type": "function",
+        "z": "648f64e1.82d27c",
+        "name": "Select 24h",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT avg1h ->'windgeschwindigkeit' AS Windgeschwindigkeit, avg1h ->'böen' AS Böen, timestamp AS Zeit FROM _1h WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 220,
+        "wires": [
+            [
+                "f3726f37.a26ab8"
+            ]
+        ]
+    },
+    {
+        "id": "beb3dea6.1c064",
+        "type": "ui_chart",
+        "z": "648f64e1.82d27c",
+        "name": "24h data",
+        "group": "6a291a22.82e48c",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "label": "Windgeschwindigkeit und Böen 24h",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#00ff00",
+            "#2d2da8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1260,
+        "y": 220,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "9e874af4.deeef8",
+        "type": "postgres",
+        "z": "648f64e1.82d27c",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 920,
+        "y": 340,
+        "wires": [
+            [
+                "e62fd6ce.0b96d"
+            ]
+        ]
+    },
+    {
+        "id": "7b60d6b8.0867a8",
+        "type": "function",
+        "z": "648f64e1.82d27c",
+        "name": "Select 1 week",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT avg1h ->'Windgeschwindigkeit' AS Windgeschwindigkeit, daten ->'Böen' AS Böen, timestamp AS Zeit FROM _1h WHERE timestamp > NOW() - INTERVAL '1 week'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 740,
+        "y": 340,
+        "wires": [
+            [
+                "9e874af4.deeef8"
+            ]
+        ]
+    },
+    {
+        "id": "5a6a8aab.958b14",
+        "type": "ui_chart",
+        "z": "648f64e1.82d27c",
+        "name": "1 week data",
+        "group": "3a9da7b5.9d4be8",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Windgeschwindigkeit und Böen 1 Woche",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "D/M",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "604800",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#00e68c",
+            "#2d2da8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1270,
+        "y": 340,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "6fa4d136.5a6eb",
+        "type": "ui_button",
+        "z": "648f64e1.82d27c",
+        "name": "",
+        "group": "6a291a22.82e48c",
+        "order": 3,
+        "width": "4",
+        "height": "1",
+        "passthru": false,
+        "label": "Aktualisieren",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "date",
+        "topic": "",
+        "x": 490,
+        "y": 200,
+        "wires": [
+            [
+                "bc49a5aa.f7182",
+                "2e210f61.fb7338"
+            ]
+        ]
+    },
+    {
+        "id": "56eeee14.1dfba8",
+        "type": "change",
+        "z": "648f64e1.82d27c",
+        "name": "Format data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "(\t  $series := [\t    { \"field\": \"böen\", \"label\": \"Böen Km/h\" },\t    { \"field\": \"windgeschwindigkeit\", \"label\": \"Windgeschwindigkeit Km/h\" }\t  ];\t  $xaxis := \"zeit\";\t  [\t    {\t      \"series\": $series.label,\t      \"data\": $series.[\t        (\t          $yaxis := $.field;\t          $$.payload.{\t            \"x\": $lookup($, $xaxis),\t            \"y\": $lookup($, $yaxis)\t          }\t        )\t      ]\t    }\t  ]\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 220,
+        "wires": [
+            [
+                "beb3dea6.1c064"
+            ]
+        ]
+    },
+    {
+        "id": "e62fd6ce.0b96d",
+        "type": "change",
+        "z": "648f64e1.82d27c",
+        "name": "Format data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "(\t  $series := [\t    { \"field\": \"böen\", \"label\": \"Böen Km/h\" },\t    { \"field\": \"windgeschwindigkeit\", \"label\": \"Windgeschwindigkeit Km/h\" }\t  ];\t  $xaxis := \"zeit\";\t  [\t    {\t      \"series\": $series.label,\t      \"data\": $series.[\t        (\t          $yaxis := $.field;\t          $$.payload.{\t            \"x\": $lookup($, $xaxis),\t            \"y\": $lookup($, $yaxis)\t          }\t        )\t      ]\t    }\t  ]\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 340,
+        "wires": [
+            [
+                "5a6a8aab.958b14"
+            ]
+        ]
+    },
+    {
+        "id": "96840c04.144748",
+        "type": "comment",
+        "z": "8da6ffba.2df618",
+        "name": "Berechnungen",
+        "info": "Hier werden die Werte in die gewünschten Einheiten umgerechnet und gerundet.",
+        "x": 1080,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "78f359e6.edae8",
+        "type": "comment",
+        "z": "8da6ffba.2df618",
+        "name": "Live-Daten",
+        "info": "Darstellen der aktuellen Daten",
+        "x": 1620,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "fea549d2.35c2d8",
+        "type": "comment",
+        "z": "8da6ffba.2df618",
+        "name": "DB",
+        "info": "Zusammenführen der Daten und Abspeichern in eine Postgres-DB",
+        "x": 1830,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "c3c68092.eb3bb",
+        "type": "ui_chart",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "34ec4339.943e8c",
+        "order": 0,
+        "width": "0",
+        "height": "0",
+        "label": "Aktuelle Temperatur und Luftfeuchtigkeit",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#0000ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1540,
+        "y": 360,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "99e06368.e906a",
+        "type": "ui_chart",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "a8a5b009.d3d848",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Wind und Böen",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#ffff66",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1620,
+        "y": 320,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "695d9850.02cdd8",
+        "type": "ui_chart",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "group": "a8a5b009.d3d848",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Niederschlag",
+        "chartType": "bar",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1630,
+        "y": 280,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "8caa2294.9b1b2",
+        "type": "template",
+        "z": "d2ae4183.6160a8",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "var redirect = function(){\nwindow.location.href = \"https://www.timeanddate.de/astronomie/daemmerung-phasen\";\n}\n<button onclick=\"redirect()\">config</button>",
+        "output": "json",
+        "x": 1360,
+        "y": 60,
+        "wires": [
+            [
+                "8c649bdf.65b648"
+            ]
+        ]
+    },
+    {
+        "id": "9dccb9f2.719b",
+        "type": "mqtt out",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "topic": "$SYS/#",
+        "qos": "",
+        "retain": "",
+        "broker": "deb2ff16.bda1b8",
+        "x": 140,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "993d340b.895c78",
+        "type": "mqtt in",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "topic": "$SYS/broker/uptime",
+        "qos": "0",
+        "broker": "deb2ff16.bda1b8",
+        "x": 150,
+        "y": 420,
+        "wires": [
+            [
+                "971be78d.708af"
+            ]
+        ]
+    },
+    {
+        "id": "971be78d.708af",
+        "type": "json",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "property": "payload",
+        "action": "str",
+        "pretty": false,
+        "x": 410,
+        "y": 420,
+        "wires": [
+            [
+                "7fb1a233.4f71b4"
+            ]
+        ]
+    },
+    {
+        "id": "7fb1a233.4f71b4",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "324baf54.96157",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Uptime",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 580,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c6844817.0c2f4",
+        "type": "mqtt in",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "topic": "$SYS/broker/messages/received",
+        "qos": "0",
+        "broker": "deb2ff16.bda1b8",
+        "x": 190,
+        "y": 480,
+        "wires": [
+            [
+                "f29683b5.d530e"
+            ]
+        ]
+    },
+    {
+        "id": "f29683b5.d530e",
+        "type": "json",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "property": "payload",
+        "action": "str",
+        "pretty": false,
+        "x": 410,
+        "y": 480,
+        "wires": [
+            [
+                "85ac6e1d.047bd8"
+            ]
+        ]
+    },
+    {
+        "id": "85ac6e1d.047bd8",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "324baf54.96157",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Messages received",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 610,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "1f1088f8.db2517",
+        "type": "mqtt in",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "topic": "$SYS/broker/messages/sent",
+        "qos": "0",
+        "broker": "deb2ff16.bda1b8",
+        "x": 180,
+        "y": 540,
+        "wires": [
+            [
+                "1def34ac.e1500b"
+            ]
+        ]
+    },
+    {
+        "id": "1def34ac.e1500b",
+        "type": "json",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "property": "payload",
+        "action": "str",
+        "pretty": false,
+        "x": 410,
+        "y": 540,
+        "wires": [
+            [
+                "2a840cc6.b590dc"
+            ]
+        ]
+    },
+    {
+        "id": "2a840cc6.b590dc",
+        "type": "ui_text",
+        "z": "8da6ffba.2df618",
+        "group": "324baf54.96157",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Messages sent",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 600,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "415c2dc7.290c2c",
+        "type": "comment",
+        "z": "8da6ffba.2df618",
+        "name": "Infos",
+        "info": "Informationen über den Broker und Batteriestand",
+        "x": 370,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d14a1224.96d47",
+        "type": "ui_dropdown",
+        "z": "648f64e1.82d27c",
+        "name": "",
+        "label": "Zeitraum auswählen",
+        "place": "Select option",
+        "group": "6a291a22.82e48c",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "options": [
+            {
+                "label": "1h",
+                "value": "",
+                "type": "str"
+            },
+            {
+                "label": "24h",
+                "value": "",
+                "type": "str"
+            },
+            {
+                "label": "1 Woche",
+                "value": "",
+                "type": "str"
+            },
+            {
+                "label": "Monat",
+                "value": "",
+                "type": "str"
+            },
+            {
+                "label": "Jahr",
+                "value": "",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "",
+        "x": 520,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3176e6e1.04d97a",
+        "type": "debug",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 2050,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "86331459.f49428",
+        "type": "ui_chart",
+        "z": "648f64e1.82d27c",
+        "name": "24h data",
+        "group": "6a291a22.82e48c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Temperatur und Luftfeuchtigkeit 24h",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1260,
+        "y": 180,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "33d6d13f.34427e",
+        "type": "ui_button",
+        "z": "648f64e1.82d27c",
+        "name": "",
+        "group": "3a9da7b5.9d4be8",
+        "order": 1,
+        "width": "4",
+        "height": "1",
+        "passthru": false,
+        "label": "Aktualisieren",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "date",
+        "topic": "",
+        "x": 490,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c7a9ce72.ce37a",
+        "type": "inject",
+        "z": "648f64e1.82d27c",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 480,
+        "y": 80,
+        "wires": [
+            [
+                "41afac09.4baefc",
+                "cafb5b51.cc195"
+            ]
+        ]
+    },
+    {
+        "id": "afff47de.aa8f68",
+        "type": "debug",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 2250,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "58a5c1aa.b9e9b8",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2940,
+        "y": 80,
+        "wires": [
+            [
+                "f8c866f8.6c50a"
+            ]
+        ]
+    },
+    {
+        "id": "f8b0a8fd.2732a8",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select Ø5m",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT AVG((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2770,
+        "y": 80,
+        "wires": [
+            [
+                "58a5c1aa.b9e9b8"
+            ]
+        ]
+    },
+    {
+        "id": "f8c866f8.6c50a",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3090,
+        "y": 80,
+        "wires": [
+            [
+                "ed7e61ac.a326f8"
+            ]
+        ]
+    },
+    {
+        "id": "8053d5bd.6950a",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3550,
+        "y": 80,
+        "wires": [
+            [
+                "b75d991e.4f0398"
+            ]
+        ]
+    },
+    {
+        "id": "b4ec506.8b961b",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2940,
+        "y": 120,
+        "wires": [
+            [
+                "e62e8cc8.910c7"
+            ]
+        ]
+    },
+    {
+        "id": "6e6d404a.f69fd",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select min5m",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT MIN((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2760,
+        "y": 120,
+        "wires": [
+            [
+                "b4ec506.8b961b"
+            ]
+        ]
+    },
+    {
+        "id": "e62e8cc8.910c7",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3090,
+        "y": 120,
+        "wires": [
+            [
+                "ffa7059c.797768"
+            ]
+        ]
+    },
+    {
+        "id": "9c01812e.fbead8",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2940,
+        "y": 160,
+        "wires": [
+            [
+                "595deee1.b0c9b"
+            ]
+        ]
+    },
+    {
+        "id": "5d3ed630.d0b068",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select max5m",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT MAX((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '5 minutes'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2760,
+        "y": 160,
+        "wires": [
+            [
+                "9c01812e.fbead8"
+            ]
+        ]
+    },
+    {
+        "id": "595deee1.b0c9b",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3090,
+        "y": 160,
+        "wires": [
+            [
+                "6f613d88.bff9cc"
+            ]
+        ]
+    },
+    {
+        "id": "11e30a36.92a176",
+        "type": "trigger",
+        "z": "8da6ffba.2df618",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "payl",
+        "duration": "5",
+        "extend": false,
+        "units": "min",
+        "reset": "",
+        "bytopic": "all",
+        "name": "",
+        "x": 2510,
+        "y": 120,
+        "wires": [
+            [
+                "f8b0a8fd.2732a8",
+                "6e6d404a.f69fd",
+                "5d3ed630.d0b068"
+            ]
+        ]
+    },
+    {
+        "id": "6b13c3c1.1a3d6c",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2920,
+        "y": 240,
+        "wires": [
+            [
+                "2a5a4606.816aaa"
+            ]
+        ]
+    },
+    {
+        "id": "7392e3d2.18a80c",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select Ø1h",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT AVG((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2750,
+        "y": 240,
+        "wires": [
+            [
+                "6b13c3c1.1a3d6c"
+            ]
+        ]
+    },
+    {
+        "id": "2a5a4606.816aaa",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3070,
+        "y": 240,
+        "wires": [
+            [
+                "c8dbf511.980e28"
+            ]
+        ]
+    },
+    {
+        "id": "6224a995.43c258",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2920,
+        "y": 280,
+        "wires": [
+            [
+                "655c3833.96108"
+            ]
+        ]
+    },
+    {
+        "id": "1bcee086.973327",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select min1h",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT MIN((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2750,
+        "y": 280,
+        "wires": [
+            [
+                "6224a995.43c258"
+            ]
+        ]
+    },
+    {
+        "id": "655c3833.96108",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3070,
+        "y": 280,
+        "wires": [
+            [
+                "1ba36e0b.4a5192"
+            ]
+        ]
+    },
+    {
+        "id": "bb1da38.142776",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2920,
+        "y": 320,
+        "wires": [
+            [
+                "686dfcbf.3f2cbc"
+            ]
+        ]
+    },
+    {
+        "id": "2efb89cf.ae045e",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select max1h",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT MAX((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '1 hour'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2740,
+        "y": 320,
+        "wires": [
+            [
+                "bb1da38.142776"
+            ]
+        ]
+    },
+    {
+        "id": "686dfcbf.3f2cbc",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3070,
+        "y": 320,
+        "wires": [
+            [
+                "51defbc5.c2c664"
+            ]
+        ]
+    },
+    {
+        "id": "6043b1f9.0aba8",
+        "type": "trigger",
+        "z": "8da6ffba.2df618",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "payl",
+        "duration": "1",
+        "extend": false,
+        "units": "hr",
+        "reset": "",
+        "bytopic": "all",
+        "name": "",
+        "x": 2490,
+        "y": 280,
+        "wires": [
+            [
+                "1bcee086.973327",
+                "7392e3d2.18a80c",
+                "2efb89cf.ae045e"
+            ]
+        ]
+    },
+    {
+        "id": "576accfb.e55c4c",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 80,
+        "wires": [
+            [
+                "8053d5bd.6950a"
+            ]
+        ]
+    },
+    {
+        "id": "ed7e61ac.a326f8",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3230,
+        "y": 80,
+        "wires": [
+            [
+                "576accfb.e55c4c"
+            ]
+        ]
+    },
+    {
+        "id": "1f72bc03.a93dcc",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3550,
+        "y": 120,
+        "wires": [
+            [
+                "2bb474c1.84e034"
+            ]
+        ]
+    },
+    {
+        "id": "1979c5a3.d8b29a",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 120,
+        "wires": [
+            [
+                "1f72bc03.a93dcc"
+            ]
+        ]
+    },
+    {
+        "id": "ffa7059c.797768",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3230,
+        "y": 120,
+        "wires": [
+            [
+                "1979c5a3.d8b29a"
+            ]
+        ]
+    },
+    {
+        "id": "108f8eca.1e4f11",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3550,
+        "y": 160,
+        "wires": [
+            [
+                "c145a580.31d2"
+            ]
+        ]
+    },
+    {
+        "id": "21d2a1e6.3e87b6",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 160,
+        "wires": [
+            [
+                "108f8eca.1e4f11"
+            ]
+        ]
+    },
+    {
+        "id": "6f613d88.bff9cc",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3230,
+        "y": 160,
+        "wires": [
+            [
+                "21d2a1e6.3e87b6"
+            ]
+        ]
+    },
+    {
+        "id": "814e2bfa.de35a8",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3530,
+        "y": 240,
+        "wires": [
+            [
+                "abfc0b6f.1f82"
+            ]
+        ]
+    },
+    {
+        "id": "49f71103.0b44c",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 240,
+        "wires": [
+            [
+                "814e2bfa.de35a8"
+            ]
+        ]
+    },
+    {
+        "id": "c8dbf511.980e28",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3210,
+        "y": 240,
+        "wires": [
+            [
+                "49f71103.0b44c"
+            ]
+        ]
+    },
+    {
+        "id": "fc619f5c.c3c4b8",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3530,
+        "y": 280,
+        "wires": [
+            [
+                "75b808be.9051"
+            ]
+        ]
+    },
+    {
+        "id": "a9c444ce.4452f8",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 280,
+        "wires": [
+            [
+                "fc619f5c.c3c4b8"
+            ]
+        ]
+    },
+    {
+        "id": "1ba36e0b.4a5192",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3210,
+        "y": 280,
+        "wires": [
+            [
+                "a9c444ce.4452f8"
+            ]
+        ]
+    },
+    {
+        "id": "c9483eb8.ff8e98",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3530,
+        "y": 320,
+        "wires": [
+            [
+                "803b49da.e743a"
+            ]
+        ]
+    },
+    {
+        "id": "a78e29a6.3b8718",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 320,
+        "wires": [
+            [
+                "c9483eb8.ff8e98"
+            ]
+        ]
+    },
+    {
+        "id": "51defbc5.c2c664",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3210,
+        "y": 320,
+        "wires": [
+            [
+                "a78e29a6.3b8718"
+            ]
+        ]
+    },
+    {
+        "id": "c0f6d293.36b64",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2920,
+        "y": 400,
+        "wires": [
+            [
+                "8d2f3481.4b5e58"
+            ]
+        ]
+    },
+    {
+        "id": "8aa602d0.7d9528",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select Ø1d",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT AVG((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT AVG((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2750,
+        "y": 400,
+        "wires": [
+            [
+                "c0f6d293.36b64"
+            ]
+        ]
+    },
+    {
+        "id": "8d2f3481.4b5e58",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3090,
+        "y": 400,
+        "wires": [
+            [
+                "bd7b417e.0c4278"
+            ]
+        ]
+    },
+    {
+        "id": "da3e576f.26e48",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2920,
+        "y": 440,
+        "wires": [
+            [
+                "fe45a872.02015"
+            ]
+        ]
+    },
+    {
+        "id": "8fede678.bff3e8",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select min1d",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT MIN((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MIN((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2750,
+        "y": 440,
+        "wires": [
+            [
+                "da3e576f.26e48"
+            ]
+        ]
+    },
+    {
+        "id": "fe45a872.02015",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3090,
+        "y": 440,
+        "wires": [
+            [
+                "4341db9c.ea6184"
+            ]
+        ]
+    },
+    {
+        "id": "29e80844.214c",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 2920,
+        "y": 480,
+        "wires": [
+            [
+                "3dad7b1f.f3cdfc"
+            ]
+        ]
+    },
+    {
+        "id": "8621bfcf.37c27",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "Select max1d",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT MAX((daten ->'Temperatur')::TEXT::FLOAT) AS Temperatur FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Luftfeuchtigkeit')::TEXT::FLOAT) AS Luftfeuchtigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Windgeschwindigkeit')::TEXT::FLOAT) AS Windgeschwindigkeit FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: \"SELECT MAX((daten ->'Böen')::TEXT::FLOAT) AS Böen FROM adaten WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2740,
+        "y": 480,
+        "wires": [
+            [
+                "29e80844.214c"
+            ]
+        ]
+    },
+    {
+        "id": "3dad7b1f.f3cdfc",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 3090,
+        "y": 480,
+        "wires": [
+            [
+                "2ca41e49.1b914a"
+            ]
+        ]
+    },
+    {
+        "id": "50cf0adf.d625c4",
+        "type": "trigger",
+        "z": "8da6ffba.2df618",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "payl",
+        "duration": "24",
+        "extend": false,
+        "units": "hr",
+        "reset": "",
+        "bytopic": "all",
+        "name": "",
+        "x": 2490,
+        "y": 440,
+        "wires": [
+            [
+                "8fede678.bff3e8",
+                "8aa602d0.7d9528",
+                "8621bfcf.37c27"
+            ]
+        ]
+    },
+    {
+        "id": "a513ab93.99b8f",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3530,
+        "y": 400,
+        "wires": [
+            [
+                "3a9fcd5b.03e212"
+            ]
+        ]
+    },
+    {
+        "id": "a4fff9c4.d0f948",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 400,
+        "wires": [
+            [
+                "a513ab93.99b8f"
+            ]
+        ]
+    },
+    {
+        "id": "bd7b417e.0c4278",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3230,
+        "y": 400,
+        "wires": [
+            [
+                "a4fff9c4.d0f948"
+            ]
+        ]
+    },
+    {
+        "id": "bd0cd87d.4453d",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3530,
+        "y": 440,
+        "wires": [
+            [
+                "1959fcd6.9e9343"
+            ]
+        ]
+    },
+    {
+        "id": "c0565fc0.ac51b8",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 440,
+        "wires": [
+            [
+                "bd0cd87d.4453d"
+            ]
+        ]
+    },
+    {
+        "id": "4341db9c.ea6184",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3230,
+        "y": 440,
+        "wires": [
+            [
+                "c0565fc0.ac51b8"
+            ]
+        ]
+    },
+    {
+        "id": "21e79d68.482302",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "4",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3530,
+        "y": 480,
+        "wires": [
+            [
+                "2ac57f17.35615"
+            ]
+        ]
+    },
+    {
+        "id": "ab6fa0c2.5277a8",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload, 2)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3380,
+        "y": 480,
+        "wires": [
+            [
+                "21e79d68.482302"
+            ]
+        ]
+    },
+    {
+        "id": "2ca41e49.1b914a",
+        "type": "split",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "topic",
+        "x": 3230,
+        "y": 480,
+        "wires": [
+            [
+                "ab6fa0c2.5277a8"
+            ]
+        ]
+    },
+    {
+        "id": "dff5a486.0803e8",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "_5min INSERT",
+        "func": "var plavg = msg.payload[\"Ø\"];\nvar plmax = msg.payload.max;\nvar plmin = msg.payload.min;\n\nmsg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: 'insert into _5min (timestamp, avg5m, max, min) values ($1, $2, $3, $4)',\n        params: ['now', plavg, plmax, plmin],\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 4100,
+        "y": 120,
+        "wires": [
+            [
+                "50c5762e.458068"
+            ]
+        ]
+    },
+    {
+        "id": "50c5762e.458068",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 4280,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2bb474c1.84e034",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "min",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 120,
+        "wires": [
+            [
+                "a9d500ea.03014"
+            ]
+        ]
+    },
+    {
+        "id": "c145a580.31d2",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "max",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 160,
+        "wires": [
+            [
+                "a9d500ea.03014"
+            ]
+        ]
+    },
+    {
+        "id": "b75d991e.4f0398",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Ø",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 80,
+        "wires": [
+            [
+                "a9d500ea.03014"
+            ]
+        ]
+    },
+    {
+        "id": "a9d500ea.03014",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3930,
+        "y": 120,
+        "wires": [
+            [
+                "dff5a486.0803e8"
+            ]
+        ]
+    },
+    {
+        "id": "75b808be.9051",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "min",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 280,
+        "wires": [
+            [
+                "8545c494.de0ab"
+            ]
+        ]
+    },
+    {
+        "id": "803b49da.e743a",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "max",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 320,
+        "wires": [
+            [
+                "8545c494.de0ab"
+            ]
+        ]
+    },
+    {
+        "id": "abfc0b6f.1f82",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Ø",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 240,
+        "wires": [
+            [
+                "8545c494.de0ab"
+            ]
+        ]
+    },
+    {
+        "id": "1959fcd6.9e9343",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "min",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 440,
+        "wires": [
+            [
+                "581378ad.92e2d8"
+            ]
+        ]
+    },
+    {
+        "id": "2ac57f17.35615",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "max",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 480,
+        "wires": [
+            [
+                "581378ad.92e2d8"
+            ]
+        ]
+    },
+    {
+        "id": "3a9fcd5b.03e212",
+        "type": "change",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Ø",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3700,
+        "y": 400,
+        "wires": [
+            [
+                "581378ad.92e2d8"
+            ]
+        ]
+    },
+    {
+        "id": "7b0e30f1.722628",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "_1h INSERT",
+        "func": "var plavg = msg.payload[\"Ø\"];\nvar plmax = msg.payload.max;\nvar plmin = msg.payload.min;\n\nmsg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: 'insert into _1h (timestamp, avg1h, max, min) values ($1, $2, $3, $4)',\n        params: ['now', plavg, plmax, plmin],\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 4090,
+        "y": 280,
+        "wires": [
+            [
+                "960da1f0.c2af5"
+            ]
+        ]
+    },
+    {
+        "id": "960da1f0.c2af5",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 4260,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8545c494.de0ab",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3930,
+        "y": 280,
+        "wires": [
+            [
+                "7b0e30f1.722628"
+            ]
+        ]
+    },
+    {
+        "id": "f78b96cc.2123c8",
+        "type": "function",
+        "z": "8da6ffba.2df618",
+        "name": "_1d INSERT",
+        "func": "var plavg = msg.payload[\"Ø\"];\nvar plmax = msg.payload.max;\nvar plmin = msg.payload.min;\n\nmsg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: 'insert into _1d (timestamp, avg1d, max, min) values ($1, $2, $3, $4)',\n        params: ['now', plavg, plmax, plmin],\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 4070,
+        "y": 440,
+        "wires": [
+            [
+                "2835b10f.f984de"
+            ]
+        ]
+    },
+    {
+        "id": "2835b10f.f984de",
+        "type": "postgres",
+        "z": "8da6ffba.2df618",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 4260,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "581378ad.92e2d8",
+        "type": "join",
+        "z": "8da6ffba.2df618",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 3910,
+        "y": 440,
+        "wires": [
+            [
+                "f78b96cc.2123c8"
+            ]
+        ]
+    },
+    {
+        "id": "6ee55692.42d76",
+        "type": "postgres",
+        "z": "648f64e1.82d27c",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 920,
+        "y": 420,
+        "wires": [
+            [
+                "4360c76a.c42e08"
+            ]
+        ]
+    },
+    {
+        "id": "fb972d8a.c777b8",
+        "type": "function",
+        "z": "648f64e1.82d27c",
+        "name": "Select 1m",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT avg1d ->'temperatur' AS Temperatur, avg1d ->'luftfeuchtigkeit' AS Luftfeuchtigkeit, timestamp AS Zeit FROM _1d WHERE timestamp > NOW() - INTERVAL '1 month'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 740,
+        "y": 420,
+        "wires": [
+            [
+                "6ee55692.42d76"
+            ]
+        ]
+    },
+    {
+        "id": "4360c76a.c42e08",
+        "type": "change",
+        "z": "648f64e1.82d27c",
+        "name": "Format data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "(\t  $series := [\t    { \"field\": \"temperatur\", \"label\": \"Temperatur °C\" },\t    { \"field\": \"luftfeuchtigkeit\", \"label\": \"Luftfeuchtigkeit %\" }\t    ];\t  $xaxis := \"zeit\";\t  [\t    {\t      \"series\": $series.label,\t      \"data\": $series.[\t        (\t          $yaxis := $.field;\t          $$.payload.{\t            \"x\": $lookup($, $xaxis),\t            \"y\": $lookup($, $yaxis)\t          }\t        )\t      ]\t    }\t  ]\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 420,
+        "wires": [
+            [
+                "b71b9f13.2b7628"
+            ]
+        ]
+    },
+    {
+        "id": "eb00f4d7.753b5",
+        "type": "postgres",
+        "z": "648f64e1.82d27c",
+        "postgresdb": "64c27494.ba8694",
+        "name": "",
+        "output": true,
+        "outputs": 1,
+        "x": 920,
+        "y": 460,
+        "wires": [
+            [
+                "c3852d1.6622b5"
+            ]
+        ]
+    },
+    {
+        "id": "ecc14a4c.f32698",
+        "type": "function",
+        "z": "648f64e1.82d27c",
+        "name": "Select 1m",
+        "func": "msg.payload = [\n    {\n        query: 'begin',\n    },\n    {\n        query: \"SELECT avg1d ->'windgeschwindigkeit' AS Windgeschwindigkeit, avg1d ->'böen' AS Böen, timestamp AS Zeit FROM _1d WHERE timestamp > NOW() - INTERVAL '1 day'\",\n        output: true,\n    },\n    {\n        query: 'commit',\n    },\n];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 740,
+        "y": 460,
+        "wires": [
+            [
+                "eb00f4d7.753b5"
+            ]
+        ]
+    },
+    {
+        "id": "6dcfde40.762068",
+        "type": "ui_chart",
+        "z": "648f64e1.82d27c",
+        "name": "1m data",
+        "group": "5a0260f7.427828",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "label": "Windgeschwindigkeit und Böen Monat",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "D/M",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#00ff00",
+            "#2d2da8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1260,
+        "y": 460,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "584a1389.e0b1f4",
+        "type": "ui_button",
+        "z": "648f64e1.82d27c",
+        "name": "",
+        "group": "5a0260f7.427828",
+        "order": 3,
+        "width": "4",
+        "height": "1",
+        "passthru": false,
+        "label": "Aktualisieren",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "date",
+        "topic": "",
+        "x": 490,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c3852d1.6622b5",
+        "type": "change",
+        "z": "648f64e1.82d27c",
+        "name": "Format data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "(\t  $series := [\t    { \"field\": \"böen\", \"label\": \"Böen Km/h\" },\t    { \"field\": \"windgeschwindigkeit\", \"label\": \"Windgeschwindigkeit Km/h\" }\t  ];\t  $xaxis := \"zeit\";\t  [\t    {\t      \"series\": $series.label,\t      \"data\": $series.[\t        (\t          $yaxis := $.field;\t          $$.payload.{\t            \"x\": $lookup($, $xaxis),\t            \"y\": $lookup($, $yaxis)\t          }\t        )\t      ]\t    }\t  ]\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 460,
+        "wires": [
+            [
+                "6dcfde40.762068"
+            ]
+        ]
+    },
+    {
+        "id": "b71b9f13.2b7628",
+        "type": "ui_chart",
+        "z": "648f64e1.82d27c",
+        "name": "1m data",
+        "group": "5a0260f7.427828",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Temperatur und Luftfeuchtigkeit Monat",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "D/M",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1260,
+        "y": 420,
+        "wires": [
+            [],
+            []
+        ]
+    }
+]
